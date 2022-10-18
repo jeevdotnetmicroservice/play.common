@@ -3,7 +3,7 @@ Common libraries used by Play Economy services.
 
 ## Create and publish package
 ```powershell
-$version="1.0.15"
+$version="1.0.16"
 $owner="jeevdotnetmicroservice"
 $gh_pat="[PAT HERE]"
 
