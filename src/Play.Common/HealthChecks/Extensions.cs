@@ -15,37 +15,36 @@ namespace Play.Common.HealthChecks
         private const string MongoCheckName = "mongodb";
         private const string ReadyTagName = "ready";
         private const string LiveTagName = "live";
-        private const string HealthEndPoint = "health";
+        private const string HealthEndpoint = "health";
         private const int DefaultSeconds = 3;
 
         public static IHealthChecksBuilder AddMongoDb(
             this IHealthChecksBuilder builder,
-            TimeSpan? timeout = default
-        )
+            TimeSpan? timeout = default)
         {
             return builder.Add(new HealthCheckRegistration(
-                MongoCheckName,
-                serviceProvider =>
-                {
-                    var configuration = serviceProvider.GetService<IConfiguration>();
-                    var mongoDbSettings = configuration.GetSection(nameof(MongoDbSettings))
-                                                        .Get<MongoDbSettings>();
-                    var mongoClient = new MongoClient(mongoDbSettings.ConnectionString);
-                    return new mongoDbHealthCheck(mongoClient);
-                },
-                HealthStatus.Unhealthy,
-                new[] { ReadyTagName },
-                TimeSpan.FromSeconds(DefaultSeconds)
-            ));
+                    MongoCheckName,
+                    serviceProvider =>
+                    {
+                        var configuration = serviceProvider.GetService<IConfiguration>();
+                        var mongoDbSettings = configuration.GetSection(nameof(MongoDbSettings))
+                                                           .Get<MongoDbSettings>();
+                        var mongoClient = new MongoClient(mongoDbSettings.ConnectionString);
+                        return new MongoDbHealthCheck(mongoClient);
+                    },
+                    HealthStatus.Unhealthy,
+                    new[] { ReadyTagName },
+                    TimeSpan.FromSeconds(DefaultSeconds)
+                ));
         }
 
         public static void MapPlayEconomyHealthChecks(this IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapHealthChecks($"/{HealthEndPoint}/{ReadyTagName}", new HealthCheckOptions()
+            endpoints.MapHealthChecks($"/{HealthEndpoint}/{ReadyTagName}", new HealthCheckOptions()
             {
                 Predicate = (check) => check.Tags.Contains(ReadyTagName)
             });
-            endpoints.MapHealthChecks($"/{HealthEndPoint}/{LiveTagName}", new HealthCheckOptions()
+            endpoints.MapHealthChecks($"/{HealthEndpoint}/{LiveTagName}", new HealthCheckOptions()
             {
                 Predicate = (check) => false
             });

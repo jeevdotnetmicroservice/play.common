@@ -8,10 +8,10 @@ using MongoDB.Driver;
 
 namespace Play.Common.HealthChecks
 {
-    public class mongoDbHealthCheck : IHealthCheck
+    public class MongoDbHealthCheck : IHealthCheck
     {
         private readonly MongoClient client;
-        public mongoDbHealthCheck(MongoClient client)
+        public MongoDbHealthCheck(MongoClient client)
         {
             this.client = client;
         }
